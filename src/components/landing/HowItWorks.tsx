@@ -5,7 +5,10 @@ import { Button } from "../ui/button";
 
 function HowItWorks() {
   return (
-    <section className="relative py-32 px-6 outline-hidden z-10 max-w-7xl mx-auto">
+    <section
+      id="how-it-works"
+      className="relative py-32 px-6 outline-hidden z-10 max-w-7xl mx-auto"
+    >
       {/* HEADER */}
       <div className="text-center mb-20">
         <div className="inline-flex items-center gap-2 px-4 py-2 bg-linear-to-r from-primary/5 to-primary/10 rounded-full border border-primary/10 backdrop-blur-sm mb-6">
@@ -48,8 +51,8 @@ function HowItWorks() {
               {/* Icon */}
               <div className="w-20 h-20 bg-linear-to-br from-primary/10 to-primary/5 rounded-2xl flex items-center justify-center mx-auto group-hover:scale-110 transition-transform duration-300 mb-6">
                 <Image
-                  src="/audio.png"
-                  alt="Voice Chat"
+                  src="/HoldingTooth.png"
+                  alt="Ask Dental Questions"
                   width={40}
                   height={40}
                   className="w-14"
@@ -88,8 +91,8 @@ function HowItWorks() {
               {/* Icon */}
               <div className="w-20 h-20 bg-linear-to-br from-primary/10 to-primary/5 rounded-2xl flex items-center justify-center mx-auto group-hover:scale-110 transition-transform duration-300 mb-6">
                 <Image
-                  src="/brain.png"
-                  alt="AI Brain"
+                  src="/Brushing.png"
+                  alt="AI Dental Analysis"
                   width={40}
                   height={40}
                   className="w-14"
@@ -127,8 +130,8 @@ function HowItWorks() {
               {/* Icon */}
               <div className="w-20 h-20 bg-linear-to-br from-primary/10 to-primary/5 rounded-2xl flex items-center justify-center mx-auto group-hover:scale-110 transition-transform duration-300 mb-6">
                 <Image
-                  src="/calendar.png"
-                  alt="Calendar"
+                  src="/Operation.png"
+                  alt="Book Treatment"
                   width={40}
                   height={40}
                   className="w-14"

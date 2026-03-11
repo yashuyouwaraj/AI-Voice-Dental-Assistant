@@ -1,144 +1,143 @@
 # DentWise
-Full-stack AI dental assistant platform with voice consultations, appointment orchestration, transactional email, and role-based operations tooling.
+AI-first dental care platform built with Next.js, Clerk, Prisma, Resend, and Vapi.
+
+DentWise combines patient experience, appointment operations, proactive reminders, and voice AI into one full-stack product.
 
 ![DentWise Homepage](public/Homepage.png)
 
-## Table of Contents
-1. [What This Project Is](#what-this-project-is)
-2. [Product Tour](#product-tour)
-3. [Feature Matrix](#feature-matrix)
-4. [Tech Stack](#tech-stack)
-5. [System Architecture](#system-architecture)
-6. [Data Model](#data-model)
-7. [Environment Variables](#environment-variables)
-8. [Local Setup](#local-setup)
-9. [Key Runtime Flows](#key-runtime-flows)
-10. [API Contract](#api-contract)
-11. [Project Structure](#project-structure)
-12. [Scripts](#scripts)
-13. [Deployment Notes](#deployment-notes)
-14. [Quality and Roadmap](#quality-and-roadmap)
+## Why DentWise
+Most dental apps only solve booking. DentWise solves the full loop:
+- Awareness: landing + pricing + FAQ
+- Action: appointment booking with doctor slot logic
+- Continuity: reminders, notifications, timeline, and care plans
+- Intelligence: AI triage + voice assistant
+- Operations: admin dashboard for doctors, availability, reminders, and analytics
 
-## What This Project Is
-DentWise is built as a complete patient-care product, not just a UI demo.
+## What Is New In This Version
+- Multi-page footer with live routes (`/help-center`, `/contact`, `/status`, `/privacy`, `/terms`, `/security`)
+- Reminder operations APIs and cron pipeline
+- Patient timeline, notifications inbox, and care-plan tracking
+- Emergency triage card (feature-flag controlled)
+- Doctor availability engine with day/time/slot controls
+- Email action links and stronger production safety around secrets
 
-It combines:
-- A marketing site for acquisition.
-- A protected patient dashboard for personalized care tracking.
-- Multi-step appointment booking with slot management.
-- A voice AI consultation experience (plan-gated).
-- Admin operations panel for doctors and appointments.
-- Appointment confirmation email pipeline.
-
-## Product Tour
-### Landing + Positioning
-| Homepage | Footer |
+## Product Screens
+| Landing | Dashboard |
 |---|---|
-| ![Homepage](public/Homepage.png) | ![Footer](public/Footer.png) |
+| ![Homepage](public/Homepage.png) | ![Dashboard](public/Dashboard.png) |
 
+| Appointments Step 1 | Appointments Step 2 |
+|---|---|
+| ![Appointment Step 1](public/AppointmentPage_1.png) | ![Appointment Step 2](public/AppointmentPage_2.png) |
+
+| Voice Assistant | Admin |
+|---|---|
+| ![AI Dental Assistant](public/AiDentalAssistant.png) | ![Admin Page](public/Admin%20Page.png) |
+
+## Core Features
 ### Patient Experience
-| Dashboard | Appointments Step 1 |
-|---|---|
-| ![Dashboard](public/Dashboard.png) | ![Appointment Step 1](public/AppointmentPage_1.png) |
+- Clerk authentication and protected routes
+- Dashboard with appointment overview
+- Multi-step appointment booking
+- Confirmation modal and confirmation email
+- Timeline of appointment/reminder/notification events
+- Notification inbox with mark-read actions
+- Care-plan tasks with completion toggles
+- Voice assistant access (plan gated)
 
-| Appointments Step 2 | Confirmation Modal |
-|---|---|
-| ![Appointment Step 2](public/AppointmentPage_2.png) | ![Appointment Confirmation](public/AppointmentConfirmation.png) |
+### Clinical Intelligence
+- Symptom-based emergency triage card
+- Urgency-aware booking hints
+- Follow-up care generation after completed appointments
 
-### Voice + Subscription
-| AI Dental Assistant | Payment/Upgrade |
-|---|---|
-| ![AI Dental Assistant](public/AiDentalAssistant.png) | ![Payment Page](public/PaymentPage.png) |
+### Admin + Operations
+- Doctor management (create/edit/active status)
+- Recent appointment status toggling (`CONFIRMED`/`COMPLETED`)
+- Doctor availability manager (day-level configuration)
+- Reminder dispatch controls and reminder stats
+- Risk alerts and ops analytics panels
 
-### Admin Operations
-| Admin Dashboard | Add Doctor |
-|---|---|
-| ![Admin Page](public/Admin%20Page.png) | ![Add Doctor](public/AddDoctor.png) |
-
-| Recent Appointment Management |
-|---|
-| ![Recent Appointment](public/RecentAppointment.png) |
-
-## Feature Matrix
-| Capability | Patients | Admin |
-|---|---|---|
-| Clerk authentication | Yes | Yes |
-| Role-based entry routing | Yes | Yes |
-| AI voice assistant (Vapi) | Yes (plan-gated) | Yes (if entitled) |
-| Appointment booking flow | Yes | View/manage all |
-| Doctor directory browsing | Yes | Full CRUD |
-| Appointment status update | No | Yes |
-| Transactional email notifications | Yes | System-driven |
-| Subscription upgrade screen | Yes | Yes |
+### Reminder and Email System
+- Transactional appointment confirmation email via Resend
+- Scheduled reminders (`BOOKING_CONFIRMATION`, `PRE_VISIT_24H`, `PRE_VISIT_2H`, `FOLLOW_UP_24H`)
+- Admin/manual dispatch API and cron dispatch API
+- Resend webhook ingestion for delivery events
 
 ## Tech Stack
 ### Frontend
-- Next.js 15 App Router + Turbopack
+- Next.js 15 (App Router + Turbopack)
 - React 19 + TypeScript
-- Tailwind CSS v4
-- shadcn/ui + Lucide icons + Base UI
-- TanStack React Query
+- Tailwind CSS v4 + shadcn/ui
+- TanStack Query
+- Lucide icons
 
-### Backend / Services
-- Server Actions + Route Handlers
+### Backend
+- Next.js Route Handlers + Server Actions
 - Prisma ORM + PostgreSQL (`@prisma/adapter-pg`)
-- Clerk (Auth, user session, pricing table, plans)
-- Resend + React Email for notifications
-- Vapi Web SDK for voice AI
+- Clerk (auth + role checks)
+- Resend (emails)
+- Vapi (voice AI)
 
 ### Tooling
-- Biome for linting and formatting
-- Prisma CLI for schema/client workflows
-- Vercel-ready build pipeline
+- Biome (format + lint)
+- Prisma CLI
+- Vercel cron integration
 
-## System Architecture
+## Architecture Overview
 ```text
-[User Browser]
-   |
-   v
-[Next.js App Router]
-   |-- Server Components
-   |-- Client Components
-   |-- Server Actions (users/doctors/appointments)
-   |-- API Route: /api/send-appointment-email
-   |
-   +--> [Clerk] session/auth/plan checks
-   +--> [Prisma + PostgreSQL] users, doctors, appointments
-   +--> [Resend] appointment confirmation emails
-   +--> [Vapi] real-time voice calls + transcript events
+Browser (Patient/Admin)
+  -> Next.js App Router
+    -> Server Components + Client Components
+    -> Server Actions (users, doctors, appointments, engagement)
+    -> API Routes (email, reminders, cron, webhooks)
+      -> Prisma + PostgreSQL
+      -> Clerk
+      -> Resend
+      -> Vapi
 ```
 
-## Data Model
-Defined in `prisma/schema.prisma`:
-- `User`: `id`, `clerkId`, `email`, `firstName`, `lastName`, timestamps.
-- `Doctor`: profile info, `isActive`, image, gender, relations.
-- `Appointment`: date/time, status, reason, foreign keys to user and doctor.
+## Data Model (High-Level)
+Main models in `prisma/schema.prisma`:
+- `User`
+- `Doctor`
+- `Appointment`
+- `AppointmentReminder`
+- `ReminderDeliveryEvent`
+- `AppointmentActionToken`
+- `DoctorAvailability`
+- `Notification`
+- `CarePlan`
+- `CareTask`
 
-Enums:
+Key enums include:
 - `AppointmentStatus`: `CONFIRMED`, `COMPLETED`
-- `Gender`: `MALE`, `FEMALE`
+- `ReminderType`, `ReminderStatus`, `ReminderChannel`
+- `NotificationType`
 
 ## Environment Variables
-Create `.env` at repository root:
+Copy `.env.example` to `.env` and fill all required values.
 
 ```env
-# PostgreSQL
-DATABASE_URL=postgresql://USER:PASSWORD@HOST:PORT/DB_NAME
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_or_pk_live
+CLERK_SECRET_KEY=sk_test_or_sk_live
+DATABASE_URL="postgresql://USER:PASSWORD@HOST:PORT/DB_NAME?sslmode=require"
 
-# Clerk
-NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_...
-CLERK_SECRET_KEY=sk_...
+NEXT_PUBLIC_VAPI_ASSISTANT_ID=your-vapi-assistant-id
+NEXT_PUBLIC_VAPI_API_KEY=your-vapi-public-api-key
+
 ADMIN_EMAIL=admin@example.com
 
-# Vapi
-NEXT_PUBLIC_VAPI_API_KEY=...
-NEXT_PUBLIC_VAPI_ASSISTANT_ID=...
-
-# Resend
-RESEND_API_KEY=...
-
-# Public app URL for email links
+RESEND_API_KEY=re_xxxxxxxxxxxxxxxxx
+EMAIL_FROM="DentWise <no-reply@your-domain.com>"
 NEXT_PUBLIC_APP_URL=https://your-domain.com
+
+NEXT_PUBLIC_ENABLE_TRIAGE=true
+ENABLE_REMINDER_APIS=true
+ENABLE_RESEND_WEBHOOK=false
+
+REMINDER_API_SECRET=set-a-strong-random-secret
+RESEND_WEBHOOK_SECRET=set-a-strong-random-secret
+CRON_SECRET=set-a-strong-random-secret
 ```
 
 ## Local Setup
@@ -146,131 +145,142 @@ NEXT_PUBLIC_APP_URL=https://your-domain.com
 ```bash
 npm install
 ```
-2. Add `.env` values.
-3. Sync schema to DB:
+
+2. Configure environment:
+```bash
+cp .env.example .env
+```
+
+3. Sync schema and generate client:
 ```bash
 npx prisma db push
+npx prisma generate
 ```
-4. Start app:
+
+4. Run development server:
 ```bash
 npm run dev
 ```
-5. Visit:
+
+5. Open app:
 ```text
 http://localhost:3000
 ```
 
-Optional:
+Optional DB UI:
 ```bash
 npx prisma studio
 ```
 
-## Key Runtime Flows
-### 1. Login and Role Redirect
-- `/` checks Clerk user server-side.
-- If signed in and email equals `ADMIN_EMAIL`, redirect to `/admin`.
-- Otherwise redirect to `/dashboard`.
-
-### 2. User Sync
-- On homepage visit, `syncUser()` creates local DB user if missing.
-- User is matched by `clerkId`.
-
-### 3. Appointment Booking
-- User picks doctor, date, time, and appointment type.
-- Server action creates appointment with status `CONFIRMED`.
-- UI triggers email API route for confirmation.
-- Success modal displays booking summary.
-
-### 4. Voice Session
-- `/voice` checks Clerk plan entitlements (`ai_basic`, `ai_pro`).
-- If authorized, Vapi call starts and transcript events stream into UI.
-- If not authorized, user sees upgrade gate.
-
-### 5. Admin Operations
-- Admin dashboard aggregates doctors and appointments.
-- Admin can add/edit doctor profiles.
-- Admin can toggle appointment status in recent appointments table.
-
-## API Contract
-### `POST /api/send-appointment-email`
-Sends appointment confirmation mail via Resend using React Email template.
-
-Request body:
-```json
-{
-  "userEmail": "patient@example.com",
-  "doctorName": "Dr. Jane Doe",
-  "appointmentDate": "Friday, March 20, 2026",
-  "appointmentTime": "10:30",
-  "appointmentType": "Regular Checkup",
-  "duration": "60 min",
-  "price": "$120"
-}
-```
-
-Success response:
-```json
-{
-  "message": "Email sent successfully",
-  "emailId": "resend_message_id"
-}
-```
-
-## Project Structure
-```text
-src/
-  app/
-    admin/                    # Admin routes and shell
-    appointments/             # Booking page
-    dashboard/                # Patient dashboard
-    pro/                      # Pricing / upgrade
-    voice/                    # Voice assistant page
-    api/send-appointment-email/route.ts
-  components/
-    admin/                    # Doctor + appointment management UI
-    appointments/             # Multi-step booking flow
-    dashboard/                # Dashboard widgets
-    emails/                   # React Email templates
-    landing/                  # Marketing sections
-    voice/                    # Voice UX and gating
-  hooks/                      # React Query hooks
-  lib/
-    actions/                  # Server actions
-    prisma.ts                 # Prisma singleton
-    resend.ts                 # Resend client
-    vapi.ts                   # Vapi client
-prisma/
-  schema.prisma
-public/
-  *.png / *.svg               # README visuals and app assets
-```
-
 ## Scripts
-- `npm run dev` - run dev server with Turbopack.
-- `npm run build` - Prisma generate + production build.
-- `npm run start` - run production build.
-- `npm run lint` - Biome checks.
-- `npm run format` - Biome format write.
+- `npm run dev`: start local dev server
+- `npm run build`: production build (`prisma generate && next build --turbopack`)
+- `npm run start`: run production server
+- `npm run lint`: Biome checks
+- `npm run format`: Biome auto-format
 
-## Deployment Notes
-- Target platform: Vercel.
-- Configure all environment variables in project settings.
-- Use production Clerk keys and configure plans (`ai_basic`, `ai_pro`).
-- Set `NEXT_PUBLIC_APP_URL` to deployed HTTPS domain for correct email links/images.
-- Ensure production `DATABASE_URL` is reachable from Vercel region.
+## Important Routes
+### App Routes
+- `/` landing
+- `/dashboard` patient dashboard
+- `/appointments` booking flow
+- `/voice` voice assistant
+- `/pro` plan/upgrade page
+- `/admin` admin panel
+- `/timeline` patient timeline
+- `/notifications` patient inbox
+- `/care-plan` patient care tasks
 
-## Quality and Roadmap
-Current strengths:
-- End-to-end product flow across patient + admin + AI voice.
-- Solid service integration breadth (Auth, DB, Email, Voice).
-- Typed full-stack codebase with clear domain modules.
+### Footer + Info Routes
+- `/help-center`
+- `/contact`
+- `/status`
+- `/privacy`
+- `/terms`
+- `/security`
 
-Recommended next upgrades:
-- Add automated tests (unit + integration + e2e).
-- Introduce Prisma migrations workflow for production evolution.
-- Add structured logging and error monitoring.
-- Add rate limiting for public/API surfaces.
-- Add RBAC abstraction if admin roles expand beyond single `ADMIN_EMAIL`.
+### API Routes
+- `POST /api/send-appointment-email`
+- `GET /api/appointments/respond`
+- `POST /api/reminders/appointment`
+- `POST /api/admin/reminders/dispatch`
+- `GET /api/cron/reminders/dispatch`
+- `POST /api/webhooks/resend`
+
+## Reminder and Cron Operations
+- `vercel.json` schedules cron every 15 minutes:
+  - `GET /api/cron/reminders/dispatch`
+- In production, set `CRON_SECRET` and send:
+  - `Authorization: Bearer <CRON_SECRET>`
+- If reminder APIs are enabled, secure them with:
+  - `REMINDER_API_SECRET`
+- If webhook is enabled, secure it with:
+  - `RESEND_WEBHOOK_SECRET`
+
+## Deployment (Vercel)
+1. Import repo into Vercel.
+2. Add all env variables from `.env.example`.
+3. Set `NEXT_PUBLIC_APP_URL` to deployed HTTPS domain.
+4. Use verified sender domain in `EMAIL_FROM` for Resend.
+5. Ensure database is reachable from Vercel region.
+6. Deploy.
+
+## API Quick Examples
+### Send appointment email
+```bash
+curl -X POST http://localhost:3000/api/send-appointment-email \
+  -H "Content-Type: application/json" \
+  -d '{
+    "userEmail": "patient@example.com",
+    "doctorName": "Dr. Jane Doe",
+    "appointmentDate": "Friday, March 20, 2026",
+    "appointmentTime": "10:30",
+    "appointmentType": "Regular Checkup",
+    "duration": "60 min",
+    "price": "$120"
+  }'
+```
+
+### Dispatch due reminders manually (admin endpoint)
+```bash
+curl -X POST http://localhost:3000/api/admin/reminders/dispatch \
+  -H "Content-Type: application/json" \
+  -d '{"limit": 50, "backfill": true}'
+```
+
+## Troubleshooting
+### `Internal server error` while sending emails
+- Verify `RESEND_API_KEY`
+- Verify `EMAIL_FROM` is valid/verified for production
+- Check API response `providerError` details (non-OK response)
+
+### No reminder dispatch happening
+- Ensure `ENABLE_REMINDER_APIS=true`
+- Ensure due reminders exist (`scheduledFor <= now` and `status=PENDING`)
+- Verify auth header/secret for reminder endpoints
+
+### App builds locally but fails on deploy
+- Re-check environment variables in Vercel dashboard
+- Confirm `NEXT_PUBLIC_APP_URL` is correct
+- Confirm DB credentials and network access
+
+### Booking issues due to slot availability
+- Validate doctor availability entries in admin panel
+- Confirm selected date/time are valid and not already booked
+
+## Quality Gates
+Current baseline:
+- `npm run lint` passing
+- `npx tsc --noEmit` passing
+- `npm run build` passing
+
+## Roadmap Suggestions
+- Add e2e tests for booking + reminder lifecycle
+- Add audit logs for admin actions
+- Add SMS reminder channel
+- Add patient-facing appointment reschedule UI from email token actions
+- Add observability (Sentry/OpenTelemetry)
 
 ## License
-No explicit license file yet. Add `LICENSE` if this repo will be distributed publicly.
+No license file is currently included.
+Add a `LICENSE` file before public distribution.

@@ -1,28 +1,52 @@
 "use client";
 
-import { vapi } from "@/lib/vapi";
 import { useUser } from "@clerk/nextjs";
-import { useEffect, useRef, useState } from "react";
-import { Card } from "../ui/card";
 import Image from "next/image";
+import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
+import { vapi } from "@/lib/vapi";
 import { Button } from "../ui/button";
+import { Card } from "../ui/card";
+
+type VapiMessage = {
+  id: string;
+  content: string;
+  role: "assistant" | "user" | "system";
+};
+
+type VapiTranscriptEvent = {
+  type?: string;
+  transcriptType?: string;
+  transcript?: string;
+  role?: "assistant" | "user" | "system";
+};
 
 function VapiWidget() {
   const [callActive, setCallActive] = useState(false);
   const [connecting, setConnecting] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
-  const [messages, setMessages] = useState<any[]>([]);
+  const [messages, setMessages] = useState<VapiMessage[]>([]);
   const [callEnded, setCallEnded] = useState(false);
 
   const { user, isLoaded } = useUser();
   const messageContainerRef = useRef<HTMLDivElement>(null);
 
+  const latestUserIntent = [...messages]
+    .reverse()
+    .find((m) => m.role === "user")
+    ?.content?.toLowerCase?.() as string | undefined;
+
+  const bookingIntent = latestUserIntent
+    ? /book|appointment|tomorrow|next week|schedule/.test(latestUserIntent)
+    : false;
+
   // auto-scroll for messages
   useEffect(() => {
     if (messageContainerRef.current) {
-      messageContainerRef.current.scrollTop = messageContainerRef.current.scrollHeight;
+      messageContainerRef.current.scrollTop =
+        messageContainerRef.current.scrollHeight;
     }
-  }, [messages]);
+  }, []);
 
   // setup event listeners for VAPI
   useEffect(() => {
@@ -51,14 +75,18 @@ function VapiWidget() {
       setIsSpeaking(false);
     };
 
-    const handleMessage = (message: any) => {
+    const handleMessage = (message: VapiTranscriptEvent) => {
       if (message.type === "transcript" && message.transcriptType === "final") {
-        const newMessage = { content: message.transcript, role: message.role };
+        const newMessage: VapiMessage = {
+          id: `${Date.now()}-${Math.random()}`,
+          content: message.transcript || "",
+          role: message.role || "assistant",
+        };
         setMessages((prev) => [...prev, newMessage]);
       }
     };
 
-    const handleError = (error: any) => {
+    const handleError = (error: unknown) => {
       console.log("Vapi Error", error);
       setConnecting(false);
       setCallActive(false);
@@ -111,7 +139,8 @@ function VapiWidget() {
           <span className="text-primary uppercase">AI Dental Assistant</span>
         </h1>
         <p className="text-muted-foreground mt-2">
-          Have a voice conversation with our AI assistant for dental advice and guidance
+          Have a voice conversation with our AI assistant for dental advice and
+          guidance
         </p>
       </div>
 
@@ -130,18 +159,22 @@ function VapiWidget() {
             >
               {/* voice wave animation when speaking */}
               <div className="absolute left-0 right-0 top-1/2 -translate-y-1/2 flex justify-center items-center h-20">
-                {[...Array(5)].map((_, i) => (
-                  <div
-                    key={i}
-                    className={`mx-1 h-16 w-1 bg-primary rounded-full ${
-                      isSpeaking ? "animate-sound-wave" : ""
-                    }`}
-                    style={{
-                      animationDelay: `${i * 0.1}s`,
-                      height: isSpeaking ? `${Math.random() * 50 + 20}%` : "5%",
-                    }}
-                  />
-                ))}
+                {["wave-1", "wave-2", "wave-3", "wave-4", "wave-5"].map(
+                  (waveKey, i) => (
+                    <div
+                      key={waveKey}
+                      className={`mx-1 h-16 w-1 bg-primary rounded-full ${
+                        isSpeaking ? "animate-sound-wave" : ""
+                      }`}
+                      style={{
+                        animationDelay: `${i * 0.1}s`,
+                        height: isSpeaking
+                          ? `${Math.random() * 50 + 20}%`
+                          : "5%",
+                      }}
+                    />
+                  ),
+                )}
               </div>
             </div>
 
@@ -166,7 +199,9 @@ function VapiWidget() {
             </div>
 
             <h2 className="text-xl font-bold text-foreground">DentWise AI</h2>
-            <p className="text-sm text-muted-foreground mt-1">Dental Assistant</p>
+            <p className="text-sm text-muted-foreground mt-1">
+              Dental Assistant
+            </p>
 
             {/* SPEAKING INDICATOR */}
             <div
@@ -184,22 +219,24 @@ function VapiWidget() {
                 {isSpeaking
                   ? "Speaking..."
                   : callActive
-                  ? "Listening..."
-                  : callEnded
-                  ? "Call ended"
-                  : "Waiting..."}
+                    ? "Listening..."
+                    : callEnded
+                      ? "Call ended"
+                      : "Waiting..."}
               </span>
             </div>
           </div>
         </Card>
 
         {/* USER CARD */}
-        <Card className={`bg-card/90 backdrop-blur-sm border overflow-hidden relative`}>
+        <Card
+          className={`bg-card/90 backdrop-blur-sm border overflow-hidden relative`}
+        >
           <div className="aspect-video flex flex-col items-center justify-center p-6 relative">
             {/* User Image */}
             <div className="relative size-32 mb-4">
               <Image
-                src={user?.imageUrl!}
+                src={user?.imageUrl || "/logo.png"}
                 alt="User"
                 width={128}
                 height={128}
@@ -209,11 +246,15 @@ function VapiWidget() {
 
             <h2 className="text-xl font-bold text-foreground">You</h2>
             <p className="text-sm text-muted-foreground mt-1">
-              {user ? (user.firstName + " " + (user.lastName || "")).trim() : "Guest"}
+              {user
+                ? `${user.firstName} ${user.lastName || ""}`.trim()
+                : "Guest"}
             </p>
 
             {/* User Ready Text */}
-            <div className={`mt-4 flex items-center gap-2 px-3 py-1 rounded-full bg-card border`}>
+            <div
+              className={`mt-4 flex items-center gap-2 px-3 py-1 rounded-full bg-card border`}
+            >
               <div className={`w-2 h-2 rounded-full bg-muted`} />
               <span className="text-xs text-muted-foreground">Ready</span>
             </div>
@@ -228,8 +269,11 @@ function VapiWidget() {
           className="w-full bg-card/90 backdrop-blur-sm border border-border rounded-xl p-4 mb-8 h-64 overflow-y-auto transition-all duration-300 scroll-smooth"
         >
           <div className="space-y-3">
-            {messages.map((msg, index) => (
-              <div key={index} className="message-item animate-in fade-in duration-300">
+            {messages.map((msg) => (
+              <div
+                key={msg.id}
+                className="message-item animate-in fade-in duration-300"
+              >
                 <div className="font-semibold text-xs text-muted-foreground mb-1">
                   {msg.role === "assistant" ? "DentWise AI" : "You"}:
                 </div>
@@ -239,8 +283,12 @@ function VapiWidget() {
 
             {callEnded && (
               <div className="message-item animate-in fade-in duration-300">
-                <div className="font-semibold text-xs text-primary mb-1">System:</div>
-                <p className="text-foreground">Call ended. Thank you for using DentWise AI!</p>
+                <div className="font-semibold text-xs text-primary mb-1">
+                  System:
+                </div>
+                <p className="text-foreground">
+                  Call ended. Thank you for using DentWise AI!
+                </p>
               </div>
             )}
           </div>
@@ -254,8 +302,8 @@ function VapiWidget() {
             callActive
               ? "bg-destructive hover:bg-destructive/90"
               : callEnded
-              ? "bg-red-500 hover:bg-red-700"
-              : "bg-primary hover:bg-primary/90"
+                ? "bg-red-500 hover:bg-red-700"
+                : "bg-primary hover:bg-primary/90"
           } text-white relative`}
           onClick={toggleCall}
           disabled={connecting || callEnded}
@@ -268,13 +316,23 @@ function VapiWidget() {
             {callActive
               ? "End Call"
               : connecting
-              ? "Connecting..."
-              : callEnded
-              ? "Call Ended"
-              : "Start Call"}
+                ? "Connecting..."
+                : callEnded
+                  ? "Call Ended"
+                  : "Start Call"}
           </span>
         </Button>
       </div>
+
+      {bookingIntent ? (
+        <div className="mt-6 flex justify-center">
+          <Link href="/appointments">
+            <Button variant="outline">
+              Detected booking intent - Open Appointments
+            </Button>
+          </Link>
+        </div>
+      ) : null}
     </div>
   );
 }

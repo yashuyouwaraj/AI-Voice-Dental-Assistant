@@ -1,8 +1,9 @@
 import ActivityOverview from "@/components/dashboard/ActivityOverview";
+import EmergencyTriageCard from "@/components/dashboard/EmergencyTriageCard";
 import MainActions from "@/components/dashboard/MainActions";
 import WelcomeSection from "@/components/dashboard/WelcomeSection";
 import Navbar from "@/components/Navbar";
-import React from "react";
+import { featureFlags } from "@/lib/feature-flags";
 
 export const dynamic = "force-dynamic";
 
@@ -14,6 +15,11 @@ function DashboardPage() {
         <WelcomeSection />
         <MainActions />
         <ActivityOverview />
+        {featureFlags.triageEnabled ? (
+          <div className="mt-6">
+            <EmergencyTriageCard />
+          </div>
+        ) : null}
       </div>
     </>
   );

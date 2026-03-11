@@ -1,6 +1,16 @@
-import { useGetDoctors } from "@/hooks/use-doctors";
-import { Doctor } from "@prisma/client";
+import type { Doctor } from "@prisma/client";
+import {
+  EditIcon,
+  MailIcon,
+  PhoneIcon,
+  PlusIcon,
+  StethoscopeIcon,
+} from "lucide-react";
+import Image from "next/image";
 import { useState } from "react";
+import { useGetDoctors } from "@/hooks/use-doctors";
+import { Badge } from "../ui/badge";
+import { Button } from "../ui/button";
 import {
   Card,
   CardContent,
@@ -8,10 +18,6 @@ import {
   CardHeader,
   CardTitle,
 } from "../ui/card";
-import { Edit, EditIcon, MailIcon, PhoneIcon, PlusIcon, StethoscopeIcon } from "lucide-react";
-import { Button } from "../ui/button";
-import Image from "next/image";
-import { Badge } from "../ui/badge";
 import AddDoctorDialog from "./AddDoctorDialog";
 import EditDoctorDialog from "./EditDoctorDialog";
 
@@ -102,12 +108,19 @@ function DoctorsManagement() {
                     </div>
                   </div>
                   {doctor.isActive ? (
-                    <Badge className="bg-green-100 text-gray-800 hover:bg-green-100">Active</Badge>
-                  ):(
+                    <Badge className="bg-green-100 text-gray-800 hover:bg-green-100">
+                      Active
+                    </Badge>
+                  ) : (
                     <Badge variant="secondary">Inactive</Badge>
                   )}
-                  <Button className="h-8 px-3" size="sm" variant="outline" onClick={()=>handleEditDoctor(doctor)}>
-                    <EditIcon className="size-4 mr-1"/>
+                  <Button
+                    className="h-8 px-3"
+                    size="sm"
+                    variant="outline"
+                    onClick={() => handleEditDoctor(doctor)}
+                  >
+                    <EditIcon className="size-4 mr-1" />
                     Edit
                   </Button>
                 </div>
@@ -117,8 +130,10 @@ function DoctorsManagement() {
         </CardContent>
       </Card>
 
-      <AddDoctorDialog isOpen={isAddDialogOpen} onClose={() => setIsAddDialogOpen(false)} />
-
+      <AddDoctorDialog
+        isOpen={isAddDialogOpen}
+        onClose={() => setIsAddDialogOpen(false)}
+      />
 
       <EditDoctorDialog
         key={selectedDoctor?.id} // advanced react

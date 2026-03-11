@@ -1,7 +1,6 @@
 import { SignInButton, SignUpButton } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
 import { Button } from "../ui/button";
 
 function Header() {
@@ -19,27 +18,34 @@ function Header() {
           <span className="font-semibold text-lg">DentWise</span>
         </Link>
         <div className="hidden md:flex items-center gap-8">
-          <a href="#" className="text-muted-foreground hover:text-foreground">
+          <Link
+            href="/#how-it-works"
+            className="text-muted-foreground hover:text-foreground"
+          >
             How it Works
-          </a>
-          <a href="#" className="text-muted-foreground hover:text-foreground">
+          </Link>
+          <Link
+            href="/#pricing"
+            className="text-muted-foreground hover:text-foreground"
+          >
             Pricing
-          </a>
-          <a href="#" className="text-muted-foreground hover:text-foreground">
+          </Link>
+          <Link
+            href="/#about"
+            className="text-muted-foreground hover:text-foreground"
+          >
             About
-          </a>
+          </Link>
         </div>
         <div className="flex items-center gap-3">
-            <SignInButton mode="modal">
-                <Button variant={"ghost"} size={"sm"}>
-                    Login
-                </Button>
-            </SignInButton>
-            <SignUpButton mode="modal">
-                <Button size={"sm"}>
-                    Sign Up
-                </Button>
-            </SignUpButton>
+          <SignInButton mode="modal">
+            <Button variant={"ghost"} size={"sm"}>
+              Login
+            </Button>
+          </SignInButton>
+          <SignUpButton mode="modal">
+            <Button size={"sm"}>Sign Up</Button>
+          </SignUpButton>
         </div>
       </div>
     </nav>
