@@ -4,6 +4,7 @@ import BookingConfirmationStep from "@/components/appointments/BookingConfirmati
 import DoctorSelectionStep from "@/components/appointments/DoctorSelectionStep";
 import ProgressSteps from "@/components/appointments/ProgressSteps";
 import TimeSelectionStep from "@/components/appointments/TimeSelectionStep";
+import { AppointmentConfirmationModal } from "@/components/appointments/AppointmentConfirmationModal";
 import Navbar from "@/components/Navbar";
 import { useBookAppointment, useUserAppointments } from "@/hooks/use-appointments";
 import { APPOINTMENT_TYPES } from "@/lib/utils";
@@ -57,7 +58,27 @@ function AppointmentsPage() {
           // store the appointment details to show in the modal
           setBookedAppointment(appointment);
 
-          //Todo: send email using resend
+          try {
+            const emailResponse = await fetch("/api/send-appointment-email", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                userEmail: appointment.patientEmail,
+                doctorName: appointment.doctorName,
+                appointmentDate: format(new Date(appointment.date), "EEEE, MMMM d, yyyy"),
+                appointmentTime: appointment.time,
+                appointmentType: appointmentType?.name,
+                duration: appointmentType?.duration,
+                price: appointmentType?.price,
+              }),
+            });
+
+            if (!emailResponse.ok) console.error("Failed to send confirmation email");
+          } catch (error) {
+            console.error("Error sending confirmation email:", error);
+          }
 
           // show the success modal
           setShowConfirmationModal(true);
@@ -155,6 +176,20 @@ function AppointmentsPage() {
             ))}
           </div>
         </div>
+      )}
+
+      {/* Appointment Confirmation Modal */}
+      {bookedAppointment && (
+        <AppointmentConfirmationModal
+          open={showConfirmationModal}
+          onOpenChange={setShowConfirmationModal}
+          appointmentDetails={{
+            doctorName: bookedAppointment.doctorName,
+            appointmentDate: format(new Date(bookedAppointment.date), "EEEE, MMMM d, yyyy"),
+            appointmentTime: bookedAppointment.time,
+            userEmail: bookedAppointment.patientEmail,
+          }}
+        />
       )}
     </>
   );
