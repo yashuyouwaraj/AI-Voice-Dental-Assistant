@@ -1,11 +1,8 @@
 # DentWise
 
 <p align="center">
+  <h1>DentWise</h1>
   <img src="./public/logo.png" alt="DentWise Logo" width="120" />
-</p>
-
-<p align="center">
-  <a href="./README.pitch.md"><b>View Startup Pitch README</b></a>
 </p>
 
 <p align="center">
@@ -13,7 +10,7 @@
 </p>
 
 <p align="center">
-  <img src="./public/hero.png" alt="DentWise Hero" />
+  <img src="./public/hero.png" alt="DentWise Hero" width="760" />
 </p>
 
 ## Overview
