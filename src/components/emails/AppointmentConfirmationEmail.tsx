@@ -1,119 +1,207 @@
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { CheckCircleIcon, MailIcon, CalendarIcon, ClockIcon, UserIcon } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
+  Body,
+  Container,
+  Head,
+  Heading,
+  Html,
+  Img,
+  Link,
+  Preview,
+  Section,
+  Text,
+} from "@react-email/components";
 
-interface AppointmentConfirmationModalProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  appointmentDetails: {
-    doctorName: string;
-    appointmentDate: string;
-    appointmentTime: string;
-    userEmail: string;
-  };
+interface AppointmentConfirmationEmailProps {
+  doctorName: string;
+  appointmentDate: string;
+  appointmentTime: string;
+  appointmentType: string;
+  duration: string;
+  price: string;
 }
 
-export function AppointmentConfirmationModal({
-  open,
-  onOpenChange,
-  appointmentDetails,
-}: AppointmentConfirmationModalProps) {
+function AppointmentConfirmationEmail({
+  doctorName,
+  appointmentDate,
+  appointmentTime,
+  appointmentType,
+  duration,
+  price,
+}: AppointmentConfirmationEmailProps) {
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader className="text-center space-y-4">
-          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
-            <CheckCircleIcon className="h-8 w-8 text-primary" />
-          </div>
+    <Html>
+      <Head />
+      <Preview>Your dental appointment has been confirmed</Preview>
+      <Body style={main}>
+        <Container style={container}>
+          <Section style={logoContainer}>
+            <Img
+              src="https://i.ibb.co.com/tRy6cC2/logo.png"
+              width="50"
+              height="50"
+              alt="DentWise"
+              style={logo}
+            />
+            <Text style={logoText}>DentWise</Text>
+          </Section>
 
-          <DialogTitle className="text-xl font-semibold text-center">
-            Appointment Confirmed!
-          </DialogTitle>
+          <Heading style={h1}>Appointment Confirmed! 🦷</Heading>
 
-          <DialogDescription className="text-center text-muted-foreground">
-            Your appointment has been successfully booked
-          </DialogDescription>
-        </DialogHeader>
+          <Text style={text}>Hi there,</Text>
 
-        <div className="space-y-6">
-          {/* Email Notification Section */}
-          <div className="flex flex-col items-center space-y-3">
-            <div className="relative">
-              <Image
-                src="https://ibb.co/9m2MgXLC"
-                alt="Email sent"
-                width={120}
-                height={120}
-                className="mx-auto"
-              />
-            </div>
+          <Text style={text}>
+            Your dental appointment has been successfully booked. Here are the details:
+          </Text>
 
-            <div className="text-center space-y-1">
-              <div className="flex items-center justify-center gap-2 text-sm font-medium text-primary">
-                <MailIcon className="h-4 w-4" />
-                Details sent to your inbox
-              </div>
-              {appointmentDetails?.userEmail && (
-                <p className="text-xs text-muted-foreground">{appointmentDetails.userEmail}</p>
-              )}
-            </div>
-          </div>
+          <Section style={appointmentDetails}>
+            <Text style={detailLabel}>Doctor</Text>
+            <Text style={detailValue}>{doctorName}</Text>
 
-          {/* Appointment Summary */}
-          {appointmentDetails && (
-            <div className="bg-muted/30 rounded-lg p-4 space-y-3">
-              <h4 className="font-medium text-sm text-center mb-3">Quick Summary</h4>
+            <Text style={detailLabel}>Appointment Type</Text>
+            <Text style={detailValue}>{appointmentType}</Text>
 
-              <div className="space-y-2">
-                <div className="flex items-center gap-3 text-sm">
-                  <UserIcon className="h-4 w-4 text-muted-foreground" />
-                  <span className="font-medium">{appointmentDetails.doctorName}</span>
-                </div>
+            <Text style={detailLabel}>Date</Text>
+            <Text style={detailValue}>{appointmentDate}</Text>
 
-                <div className="flex items-center gap-3 text-sm">
-                  <CalendarIcon className="h-4 w-4 text-muted-foreground" />
-                  <span>{appointmentDetails.appointmentDate}</span>
-                </div>
+            <Text style={detailLabel}>Time</Text>
+            <Text style={detailValue}>{appointmentTime}</Text>
 
-                <div className="flex items-center gap-3 text-sm">
-                  <ClockIcon className="h-4 w-4 text-muted-foreground" />
-                  <span>{appointmentDetails.appointmentTime}</span>
-                </div>
-              </div>
-            </div>
-          )}
+            <Text style={detailLabel}>Duration</Text>
+            <Text style={detailValue}>{duration}</Text>
 
-          {/* Action Buttons */}
-          <div className="flex flex-col gap-3">
-            <Link href="/appointments" className="w-full">
-              <Button className="w-full" onClick={() => onOpenChange(false)}>
-                View My Appointments
-              </Button>
+            <Text style={detailLabel}>Cost</Text>
+            <Text style={detailValue}>{price}</Text>
+
+            <Text style={detailLabel}>Location</Text>
+            <Text style={detailValue}>Dental Center</Text>
+          </Section>
+
+          <Text style={text}>
+            Please arrive 15 minutes early for your appointment. If you need to reschedule or
+            cancel, please contact us at least 24 hours in advance.
+          </Text>
+
+          <Section style={buttonContainer}>
+            <Link style={button} href={process.env.NEXT_PUBLIC_APP_URL + "/appointments"}>
+              View My Appointments
             </Link>
+          </Section>
 
-            <Button variant="outline" className="w-full" onClick={() => onOpenChange(false)}>
-              Close
-            </Button>
-          </div>
+          <Text style={footer}>
+            Best regards,
+            <br />
+            The DentWise Team
+          </Text>
 
-          {/* Additional Info */}
-          <div className="text-center text-xs text-muted-foreground border-t pt-4">
-            <p>
-              Please arrive 15 minutes early for your appointment.
-              <br />
-              Need to reschedule? Contact us 24 hours in advance.
-            </p>
-          </div>
-        </div>
-      </DialogContent>
-    </Dialog>
+          <Text style={footerText}>
+            If you have any questions, please contact us at support@dentwise.com
+          </Text>
+        </Container>
+      </Body>
+    </Html>
   );
 }
+
+export default AppointmentConfirmationEmail;
+
+// 🤡🤡🤡🤡🤡 styles that were generated using AI 🤡🤡🤡🤡🤡
+const main = {
+  backgroundColor: "#ffffff",
+  fontFamily:
+    '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif',
+};
+
+const container = {
+  margin: "0 auto",
+  padding: "20px 0 48px",
+  maxWidth: "560px",
+};
+
+const logoContainer = {
+  textAlign: "center" as const,
+  marginBottom: "32px",
+};
+
+const logo = {
+  borderRadius: "8px",
+  display: "inline",
+  verticalAlign: "middle",
+};
+
+const logoText = {
+  fontSize: "20px",
+  fontWeight: "bold",
+  color: "#2563eb",
+  margin: "0",
+  display: "inline",
+  marginLeft: "12px",
+};
+
+const h1 = {
+  color: "#1f2937",
+  fontSize: "24px",
+  fontWeight: "bold",
+  textAlign: "center" as const,
+  margin: "30px 0",
+};
+
+const text = {
+  color: "#374151",
+  fontSize: "16px",
+  lineHeight: "26px",
+  margin: "16px 0",
+};
+
+const appointmentDetails = {
+  backgroundColor: "#f9fafb",
+  border: "1px solid #e5e7eb",
+  borderRadius: "8px",
+  padding: "24px",
+  margin: "24px 0",
+};
+
+const detailLabel = {
+  color: "#6b7280",
+  fontSize: "14px",
+  fontWeight: "500",
+  margin: "8px 0 4px 0",
+};
+
+const detailValue = {
+  color: "#1f2937",
+  fontSize: "16px",
+  fontWeight: "600",
+  margin: "0 0 16px 0",
+};
+
+const buttonContainer = {
+  textAlign: "center" as const,
+  margin: "32px 0",
+};
+
+const button = {
+  backgroundColor: "#2563eb",
+  borderRadius: "6px",
+  color: "#ffffff",
+  fontSize: "16px",
+  fontWeight: "600",
+  textDecoration: "none",
+  textAlign: "center" as const,
+  display: "inline-block",
+  padding: "12px 24px",
+};
+
+const footer = {
+  color: "#374151",
+  fontSize: "16px",
+  lineHeight: "26px",
+  margin: "32px 0 16px 0",
+};
+
+const footerText = {
+  color: "#6b7280",
+  fontSize: "14px",
+  lineHeight: "24px",
+  margin: "16px 0 0 0",
+  textAlign: "center" as const,
+};

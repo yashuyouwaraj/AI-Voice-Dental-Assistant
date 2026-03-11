@@ -1,6 +1,6 @@
 
+import AppointmentConfirmationEmail from "@/components/emails/AppointmentConfirmationEmail";
 import resend from "@/lib/resend";
-import { AppointmentConfirmationEmail } from "@/components/emails/AppointmentConfirmationEmailTemplate";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
@@ -23,6 +23,7 @@ export async function POST(request: Request) {
     }
 
     // send the email
+    // do not use this in prod, only for testing purposes
     const { data, error } = await resend.emails.send({
       from: "DentWise <no-reply@resend.dev>",
       to: [userEmail],

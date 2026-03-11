@@ -7,10 +7,13 @@ import CTA from "@/components/landing/CTA";
 import Footer from "@/components/landing/Footer";
 import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
+import { syncUser } from "@/lib/actions/users";
 
 
 export default async function Home() {
   const user = await currentUser()
+
+  await syncUser() // ensure user is synced with database on each visit to home page
 
   //redirect auth user to appropriate page based on role
   if(user) {

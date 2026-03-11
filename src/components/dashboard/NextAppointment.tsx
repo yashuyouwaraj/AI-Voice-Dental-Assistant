@@ -3,10 +3,10 @@ import { format, isAfter, isSameDay, parseISO } from "date-fns";
 import NoNextAppointments from "./NoNextAppointments";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { CalendarIcon, ClockIcon, UserIcon } from "lucide-react";
-import { getUserAppointment } from "@/lib/actions/appointments";
+import { getUserAppointments } from "@/lib/actions/appointments";
 
 async function NextAppointment() {
-  const appointments = await getUserAppointment();
+  const appointments = await getUserAppointments();
 
   // filter for upcoming CONFIRMED appointments only (today or future)
   const upcomingAppointments =
