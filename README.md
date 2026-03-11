@@ -92,6 +92,17 @@ It combines:
 |---|---|
 | ![Terms](./public/Terms.png) | ![Security](./public/Security.png) |
 
+## Brand Visual Language
+
+<p align="center">
+  <img src="./public/Xray.png" alt="Xray" width="140" />
+  <img src="./public/HoldingTooth.png" alt="HoldingTooth" width="140" />
+  <img src="./public/Operation.png" alt="Operation" width="140" />
+  <img src="./public/Brushing.png" alt="Brushing" width="140" />
+  <img src="./public/MouthWash.png" alt="MouthWash" width="140" />
+  <img src="./public/HappyEating.png" alt="HappyEating" width="140" />
+</p>
+
 ## Feature Set
 
 ### Patient Features

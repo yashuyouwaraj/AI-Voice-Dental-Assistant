@@ -8,7 +8,7 @@
 <p align="center"><b>AI Dental Care Copilot for Patients, Clinics, and Ops Teams</b></p>
 
 <p align="center">
-  <img src="./public/hero.png" alt="DentWise Hero" />
+  <img src="./public/hero.png" alt="DentWise Hero" width="180/>
 </p>
 
 ## The Problem
