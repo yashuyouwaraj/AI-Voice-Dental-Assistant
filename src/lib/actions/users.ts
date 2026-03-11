@@ -7,6 +7,8 @@ export async function syncUser() {
   try {
     const user = await currentUser();
     if (!user) return;
+    const primaryEmail = user.emailAddresses[0]?.emailAddress;
+    if (!primaryEmail) return;
 
     const existingUser = await prisma.user.findUnique({
       where: { clerkId: user.id },
@@ -18,8 +20,7 @@ export async function syncUser() {
         clerkId: user.id,
         firstName: user.firstName,
         lastName: user.lastName,
-        email: user.emailAddresses[0].emailAddress,
-        phone: user.phoneNumbers[0]?.phoneNumber,
+        email: primaryEmail,
       },
     });
 
