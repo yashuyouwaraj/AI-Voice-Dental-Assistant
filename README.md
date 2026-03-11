@@ -1,7 +1,7 @@
 # DentWise
 Full-stack AI dental assistant platform with voice consultations, appointment orchestration, transactional email, and role-based operations tooling.
 
-![DentWise Homepage](public/dentwise_images/Homepage.png)
+![DentWise Homepage](./public/dentwise_images/Homepage.png)
 
 ## Table of Contents
 1. [What This Project Is](#what-this-project-is)
@@ -34,30 +34,30 @@ It combines:
 ### Landing + Positioning
 | Homepage | Footer |
 |---|---|
-| ![Homepage](public/dentwise_images/Homepage.png) | ![Footer](public/dentwise_images/Footer.png) |
+| ![Homepage](./public/dentwise_images/Homepage.png) | ![Footer](./public/dentwise_images/Footer.png) |
 
 ### Patient Experience
 | Dashboard | Appointments Step 1 |
 |---|---|
-| ![Dashboard](public/dentwise_images/Dashboard.png) | ![Appointment Step 1](public/dentwise_images/AppointmentPage_1.png) |
+| ![Dashboard](./public/dentwise_images/Dashboard.png) | ![Appointment Step 1](./public/dentwise_images/AppointmentPage_1.png) |
 
 | Appointments Step 2 | Confirmation Modal |
 |---|---|
-| ![Appointment Step 2](public/dentwise_images/AppointmentPage_2.png) | ![Appointment Confirmation](public/dentwise_images/AppointmentConfirmation.png) |
+| ![Appointment Step 2](./public/dentwise_images/AppointmentPage_2.png) | ![Appointment Confirmation](./public/dentwise_images/AppointmentConfirmation.png) |
 
 ### Voice + Subscription
 | AI Dental Assistant | Payment/Upgrade |
 |---|---|
-| ![AI Dental Assistant](public/dentwise_images/AiDentalAssistant.png) | ![Payment Page](public/dentwise_images/PaymentPage.png) |
+| ![AI Dental Assistant](./public/dentwise_images/AiDentalAssistant.png) | ![Payment Page](./public/dentwise_images/PaymentPage.png) |
 
 ### Admin Operations
 | Admin Dashboard | Add Doctor |
 |---|---|
-| ![Admin Page](public/dentwise_images/Admin%20Page.png) | ![Add Doctor](public/dentwise_images/AddDoctor.png) |
+| ![Admin Page](./public/dentwise_images/Admin%20Page.png) | ![Add Doctor](./public/dentwise_images/AddDoctor.png) |
 
 | Recent Appointment Management |
 |---|
-| ![Recent Appointment](public/dentwise_images/RecentAppointment.png) |
+| ![Recent Appointment](./public/dentwise_images/RecentAppointment.png) |
 
 ## Feature Matrix
 | Capability | Patients | Admin |
