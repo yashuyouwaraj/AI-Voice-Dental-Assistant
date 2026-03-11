@@ -208,7 +208,7 @@ npx prisma studio
 - `POST /api/webhooks/resend`
 
 ## Reminder and Cron Operations
-- `vercel.json` schedules cron every 15 minutes:
+- `vercel.json` schedules cron once per day (Hobby-compatible):
   - `GET /api/cron/reminders/dispatch`
 - In production, set `CRON_SECRET` and send:
   - `Authorization: Bearer <CRON_SECRET>`
