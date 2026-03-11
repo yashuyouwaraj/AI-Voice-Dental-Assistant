@@ -4,6 +4,8 @@ import WelcomeSection from "@/components/dashboard/WelcomeSection";
 import Navbar from "@/components/Navbar";
 import React from "react";
 
+export const dynamic = "force-dynamic";
+
 function DashboardPage() {
   return (
     <>
