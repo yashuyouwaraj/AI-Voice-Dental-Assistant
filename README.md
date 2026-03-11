@@ -1,7 +1,7 @@
 # DentWise
 
 <p align="center">
-  <img src="./public/logo.png" alt="DentWise Logo" width="24" />
+  <img src="./public/logo.png" alt="DentWise Logo" width="120" />
 </p>
 
 <p align="center">
@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  <img src="./public/hero.png" alt="DentWise Hero" />
+  <img src="./public/hero.png" alt="DentWise Hero" width="72"/>
 </p>
 
 ## Overview
