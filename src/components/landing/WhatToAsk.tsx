@@ -3,13 +3,18 @@ import Image from "next/image";
 
 function WhatToAsk() {
   return (
-    <section className="relative py-32 px-6 overflow-hidden bg-linear-to-b from-background to-muted/20">
+    <section
+      id="about"
+      className="relative py-32 px-6 overflow-hidden bg-linear-to-b from-background to-muted/20"
+    >
       <div className="relative z-10 max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-20">
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-linear-to-r from-primary/5 to-primary/10 rounded-full border border-primary/10 backdrop-blur-sm mb-6">
             <MessageCircleIcon className="w-4 h-4 text-primary" />
-            <span className="text-sm font-medium text-primary">AI-Powered Conversations</span>
+            <span className="text-sm font-medium text-primary">
+              AI-Powered Conversations
+            </span>
           </div>
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 tracking-tight">
             <span className="bg-linear-to-br from-foreground to-foreground/70 bg-clip-text text-transparent">
@@ -21,8 +26,8 @@ function WhatToAsk() {
             </span>
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-            From simple questions to complex concerns, our AI delivers expert-level guidance trained
-            on thousands of real dental cases
+            From simple questions to complex concerns, our AI delivers
+            expert-level guidance trained on thousands of real dental cases
           </p>
         </div>
 
@@ -30,7 +35,9 @@ function WhatToAsk() {
           {/* Left Side - Interactive Chat Examples */}
           <div className="space-y-8">
             <div className="space-y-6">
-              <h3 className="text-2xl font-bold mb-8">Common questions our AI answers:</h3>
+              <h3 className="text-2xl font-bold mb-8">
+                Common questions our AI answers:
+              </h3>
 
               {/* Chat Bubble 1 */}
               <div className="group relative">
@@ -47,8 +54,8 @@ function WhatToAsk() {
                       </div>
                       <div className="bg-muted/30 rounded-2xl p-4">
                         <p className="text-sm text-muted-foreground leading-relaxed">
-                          Get immediate advice on pain management, possible causes, and when to see
-                          a dentist urgently
+                          Get immediate advice on pain management, possible
+                          causes, and when to see a dentist urgently
                         </p>
                         <div className="flex gap-2 mt-3">
                           <span className="px-2 py-1 bg-primary/10 text-primary text-xs rounded-full">
@@ -79,8 +86,8 @@ function WhatToAsk() {
                       </div>
                       <div className="bg-muted/30 rounded-2xl p-4">
                         <p className="text-sm text-muted-foreground leading-relaxed">
-                          Compare treatment options, pricing ranges, and find the best whitening
-                          solution for your budget
+                          Compare treatment options, pricing ranges, and find
+                          the best whitening solution for your budget
                         </p>
                         <div className="flex gap-2 mt-3">
                           <span className="px-2 py-1 bg-primary/10 text-primary text-xs rounded-full">
@@ -111,8 +118,8 @@ function WhatToAsk() {
                       </div>
                       <div className="bg-muted/30 rounded-2xl p-4">
                         <p className="text-sm text-muted-foreground leading-relaxed">
-                          Learn about filling lifespan, warning signs of wear, and replacement
-                          timing guidance
+                          Learn about filling lifespan, warning signs of wear,
+                          and replacement timing guidance
                         </p>
                         <div className="flex gap-2 mt-3">
                           <span className="px-2 py-1 bg-primary/10 text-primary text-xs rounded-full">
@@ -134,8 +141,8 @@ function WhatToAsk() {
           <div className="bg-linear-to-br from-card/90 to-card/60 backdrop-blur-xl rounded-3xl p-8 border border-border/50 hover:border-primary/30 transition-all duration-500">
             <div className="flex items-center justify-center h-full">
               <Image
-                src="/confused.png"
-                alt="AI Assistant"
+                src="/ToothCare.png"
+                alt="Tooth care guidance"
                 width={500}
                 height={500}
                 className="w-full h-auto max-w-lg object-contain"

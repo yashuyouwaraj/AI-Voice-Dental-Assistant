@@ -1,13 +1,8 @@
 "use server";
-import { prisma } from "../prisma";
-import { Gender } from "@prisma/client";
+import type { Gender } from "@prisma/client";
 import { revalidatePath } from "next/cache";
+import { prisma } from "../prisma";
 import { generateAvatar } from "../utils";
-
-interface AddDoctorDialogProps {
-  isOpen: boolean;
-  onClose: () => void;
-}
 
 export async function getDoctors() {
   try {
@@ -52,11 +47,16 @@ export async function createDoctor(input: CreateDoctorInput) {
     revalidatePath("/admin");
 
     return doctor;
-  } catch (error: any) {
+  } catch (error) {
     console.error("Error in createDoctor server action", error);
 
     // handle unique constraint violation (email already exists)
-    if (error?.code === "P2002") {
+    if (
+      typeof error === "object" &&
+      error !== null &&
+      "code" in error &&
+      (error as { code?: string }).code === "P2002"
+    ) {
       throw new Error("A doctor with this email already exists");
     }
 
@@ -109,7 +109,6 @@ export async function updateDoctor(input: UpdateDoctorInput) {
     throw new Error("Failed to update doctor");
   }
 }
-
 
 export async function getAvailableDoctors() {
   try {

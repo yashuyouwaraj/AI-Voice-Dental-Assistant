@@ -1,19 +1,25 @@
 "use client";
 
-import AdminStats from "@/components/admin/AdminStats";
-import DoctorsManagement from "@/components/admin/DoctorsManagement";
-import RecentAppointments from "@/components/admin/RecentAppointments";
-import Navbar from "@/components/Navbar";
-import { useGetAppointments } from "@/hooks/use-appointments";
-import { useGetDoctors } from "@/hooks/use-doctors";
 import { useUser } from "@clerk/nextjs";
 import { SettingsIcon } from "lucide-react";
+import AdminStats from "@/components/admin/AdminStats";
+import DoctorAvailabilityManager from "@/components/admin/DoctorAvailabilityManager";
+import DoctorsManagement from "@/components/admin/DoctorsManagement";
+import OpsAnalytics from "@/components/admin/OpsAnalytics";
+import PatientRiskAlerts from "@/components/admin/PatientRiskAlerts";
+import RecentAppointments from "@/components/admin/RecentAppointments";
+import ReminderControlTable from "@/components/admin/ReminderControlTable";
+import ReminderStats from "@/components/admin/ReminderStats";
+import Navbar from "@/components/Navbar";
+import { useGetAppointments, useReminderStats } from "@/hooks/use-appointments";
+import { useGetDoctors } from "@/hooks/use-doctors";
 
 function AdminDashboardClient() {
   const { user } = useUser();
   const { data: doctors = [], isLoading: doctorsLoading } = useGetDoctors();
   const { data: appointments = [], isLoading: appointmentsLoading } =
     useGetAppointments();
+  const { data: reminderStats } = useReminderStats();
 
   // calculate stats from real data
   const stats = {
@@ -63,9 +69,18 @@ function AdminDashboardClient() {
           totalAppointments={stats.totalAppointments}
           completedAppointments={stats.completedAppointments}
         />
+        <ReminderStats
+          pending={reminderStats?.pending || 0}
+          sent={reminderStats?.sent || 0}
+          failed={reminderStats?.failed || 0}
+          dueNow={reminderStats?.dueNow || 0}
+        />
+        <OpsAnalytics />
+        <PatientRiskAlerts />
+        <ReminderControlTable />
+        <DoctorAvailabilityManager />
 
         <DoctorsManagement />
-
 
         <RecentAppointments />
       </div>
@@ -74,8 +89,6 @@ function AdminDashboardClient() {
 }
 
 export default AdminDashboardClient;
-
-
 
 function LoadingUI() {
   return (

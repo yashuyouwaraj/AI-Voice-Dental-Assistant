@@ -1,8 +1,8 @@
-import { APPOINTMENT_TYPES, getAvailableTimeSlots, getNext5Days } from "@/lib/utils";
-import { Button } from "../ui/button";
 import { ChevronLeftIcon, ClockIcon } from "lucide-react";
+import { useAvailableDoctorTimeSlots } from "@/hooks/use-appointments";
+import { APPOINTMENT_TYPES, getNext5Days } from "@/lib/utils";
+import { Button } from "../ui/button";
 import { Card, CardContent } from "../ui/card";
-import { useBookedTimeSlots } from "@/hooks/use-appointments";
 
 interface TimeSelectionStepProps {
   selectedDentistId: string;
@@ -27,10 +27,10 @@ function TimeSelectionStep({
   selectedTime,
   selectedType,
 }: TimeSelectionStepProps) {
-  const { data: bookedTimeSlots = [] } = useBookedTimeSlots(selectedDentistId, selectedDate);
+  const { data: availableTimeSlots = [], isLoading } =
+    useAvailableDoctorTimeSlots(selectedDentistId, selectedDate);
 
   const availableDates = getNext5Days();
-  const availableTimeSlots = getAvailableTimeSlots();
 
   const handleDateSelect = (date: string) => {
     onDateChange(date);
@@ -42,7 +42,7 @@ function TimeSelectionStep({
     <div className="space-y-6">
       {/* header with back button */}
       <div className="flex items-center gap-4 mb-6">
-        <Button variant="ghost" onClick={onBack}>
+        <Button type="button" variant="ghost" onClick={onBack}>
           <ChevronLeftIcon className="w-4 h-4 mr-2" />
           Back
         </Button>
@@ -67,9 +67,13 @@ function TimeSelectionStep({
                   <div className="flex justify-between items-center">
                     <div>
                       <h4 className="font-medium">{type.name}</h4>
-                      <p className="text-sm text-muted-foreground">{type.duration}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {type.duration}
+                      </p>
                     </div>
-                    <span className="font-semibold text-primary">{type.price}</span>
+                    <span className="font-semibold text-primary">
+                      {type.price}
+                    </span>
                   </div>
                 </CardContent>
               </Card>
@@ -85,6 +89,7 @@ function TimeSelectionStep({
           <div className="grid grid-cols-2 gap-3">
             {availableDates.map((date) => (
               <Button
+                type="button"
                 key={date}
                 variant={selectedDate === date ? "default" : "outline"}
                 onClick={() => handleDateSelect(date)}
@@ -107,25 +112,30 @@ function TimeSelectionStep({
           {selectedDate && (
             <div className="space-y-3">
               <h4 className="font-medium">Available Times</h4>
-              <div className="grid grid-cols-3 gap-2">
-                {availableTimeSlots.map((time) => {
-                  const isBooked = bookedTimeSlots.includes(time);
-                  return (
+              {isLoading ? (
+                <p className="text-sm text-muted-foreground">
+                  Loading slots...
+                </p>
+              ) : availableTimeSlots.length === 0 ? (
+                <p className="text-sm text-muted-foreground">
+                  No available slots for this date.
+                </p>
+              ) : (
+                <div className="grid grid-cols-3 gap-2">
+                  {availableTimeSlots.map((time) => (
                     <Button
+                      type="button"
                       key={time}
                       variant={selectedTime === time ? "default" : "outline"}
-                      onClick={() => !isBooked && onTimeChange(time)}
+                      onClick={() => onTimeChange(time)}
                       size="sm"
-                      disabled={isBooked}
-                      className={isBooked ? "opacity-50 cursor-not-allowed" : ""}
                     >
                       <ClockIcon className="w-3 h-3 mr-1" />
                       {time}
-                      {isBooked && " (Booked)"}
                     </Button>
-                  );
-                })}
-              </div>
+                  ))}
+                </div>
+              )}
             </div>
           )}
         </div>
@@ -134,7 +144,9 @@ function TimeSelectionStep({
       {/* continue button (only show when all selections are made) */}
       {selectedType && selectedDate && selectedTime && (
         <div className="flex justify-end">
-          <Button onClick={onContinue}>Review Booking</Button>
+          <Button type="button" onClick={onContinue}>
+            Review Booking
+          </Button>
         </div>
       )}
     </div>

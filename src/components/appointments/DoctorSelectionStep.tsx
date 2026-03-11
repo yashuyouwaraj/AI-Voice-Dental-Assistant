@@ -1,11 +1,16 @@
-import { useAvailableDoctors } from "@/hooks/use-doctors";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
-import Image from "next/image";
 import { MapPinIcon, PhoneIcon, StarIcon } from "lucide-react";
+import Image from "next/image";
+import { useAvailableDoctors } from "@/hooks/use-doctors";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "../ui/card";
 import { DoctorCardsLoading } from "./DoctorCardsLoading";
-
 
 interface DoctorSelectionStepProps {
   selectedDentistId: string | null;
@@ -13,22 +18,23 @@ interface DoctorSelectionStepProps {
   onContinue: () => void;
 }
 
+function DoctorSelectionStep({
+  onContinue,
+  onSelectDentist,
+  selectedDentistId,
+}: DoctorSelectionStepProps) {
+  const { data: dentists = [], isLoading } = useAvailableDoctors();
 
-function DoctorSelectionStep({onContinue,onSelectDentist,selectedDentistId}:DoctorSelectionStepProps){
-    const {data:dentists=[],isLoading} = useAvailableDoctors()
-
-    if(isLoading){
-        return (
-            <div className="space-y-6">
-                <h2 className="text-2xl font-semibold">
-                    Choose Your Dentist
-                </h2>
-                <DoctorCardsLoading />
-            </div>
-        )
-    }
-
+  if (isLoading) {
     return (
+      <div className="space-y-6">
+        <h2 className="text-2xl font-semibold">Choose Your Dentist</h2>
+        <DoctorCardsLoading />
+      </div>
+    );
+  }
+
+  return (
     <div className="space-y-6">
       <h2 className="text-2xl font-semibold">Choose Your Dentist</h2>
 
@@ -44,7 +50,7 @@ function DoctorSelectionStep({onContinue,onSelectDentist,selectedDentistId}:Doct
             <CardHeader className="pb-4">
               <div className="flex items-start gap-4">
                 <Image
-                  src={dentist.imageUrl!}
+                  src={dentist.imageUrl || "/logo.png"}
                   alt={dentist.name}
                   width={64}
                   height={64}
@@ -78,7 +84,8 @@ function DoctorSelectionStep({onContinue,onSelectDentist,selectedDentistId}:Doct
                 <span>{dentist.phone}</span>
               </div>
               <p className="text-sm text-muted-foreground">
-                {dentist.bio || "Experienced dental professional providing quality care."}
+                {dentist.bio ||
+                  "Experienced dental professional providing quality care."}
               </p>
               <Badge variant="secondary">Licensed Professional</Badge>
             </CardContent>
@@ -95,4 +102,4 @@ function DoctorSelectionStep({onContinue,onSelectDentist,selectedDentistId}:Doct
   );
 }
 
-export default DoctorSelectionStep
+export default DoctorSelectionStep;

@@ -1,7 +1,16 @@
 "use client";
 
-import { createDoctor, getAvailableDoctors, getDoctors, updateDoctor } from "@/lib/actions/doctors";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  createDoctor,
+  getAvailableDoctors,
+  getDoctors,
+  updateDoctor,
+} from "@/lib/actions/doctors";
+import {
+  getDoctorAvailabilities,
+  upsertDoctorAvailability,
+} from "@/lib/actions/engagement-actions";
 
 export function useGetDoctors() {
   const result = useQuery({
@@ -21,7 +30,7 @@ export function useCreateDoctor() {
       // invalidate related queries to refresh the data
       queryClient.invalidateQueries({ queryKey: ["getDoctors"] });
     },
-    onError: (error) => console.log("Error while  creating a doctor"),
+    onError: (_error) => console.log("Error while  creating a doctor"),
   });
 
   return result;
@@ -48,4 +57,27 @@ export function useAvailableDoctors() {
   });
 
   return result;
+}
+
+export function useDoctorAvailabilities(doctorId: string) {
+  return useQuery({
+    queryKey: ["getDoctorAvailabilities", doctorId],
+    queryFn: () => getDoctorAvailabilities(doctorId),
+    enabled: !!doctorId,
+  });
+}
+
+export function useUpsertDoctorAvailability() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: upsertDoctorAvailability,
+    onSuccess: (_data, input) => {
+      queryClient.invalidateQueries({
+        queryKey: ["getDoctorAvailabilities", input.doctorId],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["getAvailableDoctorTimeSlots"],
+      });
+    },
+  });
 }

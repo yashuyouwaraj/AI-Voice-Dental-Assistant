@@ -10,6 +10,7 @@ import {
   Section,
   Text,
 } from "@react-email/components";
+import { getAppointmentsUrl, getEmailLogoUrl } from "@/lib/email-branding";
 
 interface AppointmentConfirmationEmailProps {
   doctorName: string;
@@ -18,6 +19,8 @@ interface AppointmentConfirmationEmailProps {
   appointmentType: string;
   duration: string;
   price: string;
+  confirmUrl?: string;
+  rescheduleUrl?: string;
 }
 
 function AppointmentConfirmationEmail({
@@ -27,7 +30,12 @@ function AppointmentConfirmationEmail({
   appointmentType,
   duration,
   price,
+  confirmUrl,
+  rescheduleUrl,
 }: AppointmentConfirmationEmailProps) {
+  const logoSrc = getEmailLogoUrl();
+  const appointmentsUrl = getAppointmentsUrl();
+
   return (
     <Html>
       <Head />
@@ -35,13 +43,15 @@ function AppointmentConfirmationEmail({
       <Body style={main}>
         <Container style={container}>
           <Section style={logoContainer}>
-            <Img
-              src="https://i.ibb.co.com/tRy6cC2/logo.png"
-              width="50"
-              height="50"
-              alt="DentWise"
-              style={logo}
-            />
+            {logoSrc ? (
+              <Img
+                src={logoSrc}
+                width="50"
+                height="50"
+                alt="DentWise"
+                style={logo}
+              />
+            ) : null}
             <Text style={logoText}>DentWise</Text>
           </Section>
 
@@ -50,7 +60,8 @@ function AppointmentConfirmationEmail({
           <Text style={text}>Hi there,</Text>
 
           <Text style={text}>
-            Your dental appointment has been successfully booked. Here are the details:
+            Your dental appointment has been successfully booked. Here are the
+            details:
           </Text>
 
           <Section style={appointmentDetails}>
@@ -77,15 +88,33 @@ function AppointmentConfirmationEmail({
           </Section>
 
           <Text style={text}>
-            Please arrive 15 minutes early for your appointment. If you need to reschedule or
-            cancel, please contact us at least 24 hours in advance.
+            Please arrive 15 minutes early for your appointment. If you need to
+            reschedule or cancel, please contact us at least 24 hours in
+            advance.
           </Text>
 
-          <Section style={buttonContainer}>
-            <Link style={button} href={process.env.NEXT_PUBLIC_APP_URL + "/appointments"}>
-              View My Appointments
-            </Link>
-          </Section>
+          {appointmentsUrl ? (
+            <Section style={buttonContainer}>
+              <Link style={button} href={appointmentsUrl}>
+                View My Appointments
+              </Link>
+            </Section>
+          ) : null}
+
+          {confirmUrl || rescheduleUrl ? (
+            <Section style={buttonContainer}>
+              {confirmUrl ? (
+                <Link style={buttonSecondary} href={confirmUrl}>
+                  Confirm This Slot
+                </Link>
+              ) : null}
+              {rescheduleUrl ? (
+                <Link style={buttonGhost} href={rescheduleUrl}>
+                  Reschedule Appointment
+                </Link>
+              ) : null}
+            </Section>
+          ) : null}
 
           <Text style={footer}>
             Best regards,
@@ -204,4 +233,15 @@ const footerText = {
   lineHeight: "24px",
   margin: "16px 0 0 0",
   textAlign: "center" as const,
+};
+
+const buttonSecondary = {
+  ...button,
+  backgroundColor: "#0f766e",
+  marginRight: "10px",
+};
+
+const buttonGhost = {
+  ...button,
+  backgroundColor: "#4b5563",
 };
