@@ -31,3 +31,11 @@ export function getAppointmentsUrl() {
   if (!appUrl) return null;
   return `${appUrl}/appointments`;
 }
+
+export function getEmailFromAddress() {
+  const emailFrom = process.env.EMAIL_FROM?.trim();
+  if (emailFrom) return emailFrom;
+
+  // Resend default test sender. Works without custom domain verification.
+  return "DentWise <onboarding@resend.dev>";
+}

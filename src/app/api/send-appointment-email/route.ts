@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import AppointmentConfirmationEmail from "@/components/emails/AppointmentConfirmationEmail";
 import { getAppointmentActionLinksForEmail } from "@/lib/actions/appointments";
+import { getEmailFromAddress } from "@/lib/email-branding";
 import resend from "@/lib/resend";
 
 function getProviderErrorMessage(error: unknown) {
@@ -66,11 +67,7 @@ export async function POST(request: Request) {
       }
     }
 
-    const fromEmail =
-      process.env.EMAIL_FROM ||
-      (process.env.NODE_ENV === "production"
-        ? "DentWise <no-reply@dentwise.com>"
-        : "DentWise <no-reply@resend.dev>");
+    const fromEmail = getEmailFromAddress();
 
     const { data, error } = await resend.emails.send({
       from: fromEmail,

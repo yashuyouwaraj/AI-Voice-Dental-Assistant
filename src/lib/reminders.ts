@@ -1,5 +1,9 @@
 import type { AppointmentStatus } from "@prisma/client";
-import { getAppointmentsUrl, getEmailLogoUrl } from "@/lib/email-branding";
+import {
+  getAppointmentsUrl,
+  getEmailFromAddress,
+  getEmailLogoUrl,
+} from "@/lib/email-branding";
 import { createNotification } from "@/lib/engagement";
 import { prisma } from "@/lib/prisma";
 import resend from "@/lib/resend";
@@ -228,11 +232,7 @@ export async function dispatchDueReminders(limit = 20) {
         `${reminder.appointment.user.firstName || ""} ${reminder.appointment.user.lastName || ""}`.trim();
 
       const { data, error } = await resend.emails.send({
-        from:
-          process.env.EMAIL_FROM ||
-          (process.env.NODE_ENV === "production"
-            ? "DentWise <no-reply@dentwise.com>"
-            : "DentWise <no-reply@resend.dev>"),
+        from: getEmailFromAddress(),
         to: [reminder.appointment.user.email],
         subject: formatReminderSubject(reminder.reminderType as ReminderType),
         html: formatReminderHtml({

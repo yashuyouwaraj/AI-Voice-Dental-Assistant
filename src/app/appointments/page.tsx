@@ -144,6 +144,9 @@ function AppointmentsPageContent() {
                   errorBody?.error ||
                   emailResponse.statusText,
               );
+              toast.error(
+                `Appointment booked, but email failed: ${errorBody?.providerError || errorBody?.error || emailResponse.statusText}`,
+              );
             }
           } catch (error) {
             console.error("Error sending confirmation email:", error);
